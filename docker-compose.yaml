@@ -1,0 +1,51 @@
+﻿version: '3.9'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: pos-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "PosOptimizer123!"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "echo > /dev/tcp/localhost/1433" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: always
+
+  redis:
+    image: redis:7.0
+    container_name: pos-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: pos-api
+    environment:
+      ConnectionStrings__SqlServer: "Server=sqlserver;Database=PosOptimizer;User Id=sa;Password=PosOptimizer123!;TrustServerCertificate=True"
+      ConnectionStrings__Redis: "redis:6379"
+    ports:
+      - "7170:8080"
+    depends_on:
+      - sqlserver
+      - redis
+
+  job:
+    build:
+      context: .
+      dockerfile: Dockerfile.job
+    container_name: pos-job
+    environment:
+      ConnectionStrings__SqlServer: "Server=sqlserver;Database=PosOptimizer;User Id=sa;Password=PosOptimizer123!;TrustServerCertificate=True"
+      ConnectionStrings__Redis: "redis:6379"
+    depends_on:
+      sqlserver:
+        condition: service_healthy

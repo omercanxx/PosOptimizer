@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yaml" />
+    <File Path="Dockerfile.api" />
+    <File Path="Dockerfile.job" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/PosOptimizer.Api/PosOptimizer.Api.csproj" />
+    <Project Path="src/PosOptimizer.Application/PosOptimizer.Application.csproj" />
+    <Project Path="src/PosOptimizer.Common/PosOptimizer.Common.csproj" />
+    <Project Path="src/PosOptimizer.Infrastructure/PosOptimizer.Infrastructure.csproj" />
+    <Project Path="src/PosOptimizer.Job/PosOptimizer.Job.csproj" />
+  </Folder>
+  <Folder Name="/src/apiClients/">
+    <Project Path="src/PosOptimizer.MockApiClient/PosOptimizer.MockApiClient.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/PosOptimizer.Test/PosOptimizer.Test.csproj" />
+  </Folder>
+</Solution>

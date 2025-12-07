@@ -1,0 +1,18 @@
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+COPY . .
+RUN dotnet restore "src/PosOptimizer.Job/PosOptimizer.Job.csproj"
+
+RUN dotnet publish "src/PosOptimizer.Job/PosOptimizer.Job.csproj" \
+    -c Release \
+    -o /app/publish \
+    --self-contained true \
+    -r linux-x64 \
+    /p:PublishSingleFile=true
+
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0
+WORKDIR /app
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["./PosOptimizer.Job"]
